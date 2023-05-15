@@ -1,44 +1,59 @@
 import { Component } from 'react';
-
+import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
+import SearchLoader from 'components/Loader/Loader';
 import css from './ImageGallery.module.css';
 
 export default class ImageGallery extends Component {
   state = {
     imageItem: null,
-    loading: false,
+    error: null,
+    status: 'idle',
   };
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.imageTagsProps !== this.props.imageTagsProps) {
-      this.setState({ loading: true });
+      this.setState({ status: 'pending' });
 
       fetch(
         `https://pixabay.com/api/?q=${this.props.imageTagsProps}&key=34892278-814f9e10ef5118b0e5ee7c1d3&image_type=photo&orientation=horizontal&per_page=12`
       )
-        .then(res => res.json())
-        .then(imageItem => this.setState({ imageItem }))
-        .finally(() => this.setState({ loading: false }));
-      console.log(this.state);
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          return Promise.reject(new Error(`Error!`));
+        })
+        .then(imageItem =>
+          this.setState({ imageItem: imageItem.hits, status: 'resolved' })
+        )
+        .catch(error => this.setState({ error, status: 'rejected' }));
     }
   }
 
-  
-
   render() {
-    const {imageItem} = this.state
-    return (
-      <ul className={css.ImageGallery}>
-        {this.state.loading && <div>Loading...</div>}
-        {imageItem && (
-          <li className={css.ImageGalleryItem}>
-            <img
-              className={css.ImageGalleryItem__image}
-              src={imageItem.largeImageURL}
-              alt=""
-            />
-          </li>
-        )}
-      </ul>
-    );
+    const { imageItem, error, status } = this.state;
+
+    if (status === 'idle') {
+      return <div></div>;
+    }
+
+    if (status === 'pending') {
+      return <SearchLoader />;
+    }
+
+    if (status === 'rejected') {
+      return <h3>{error.message}</h3>;
+    }
+
+    if (status === 'resolved') {
+      return (
+        <ul className={css.ImageGallery}>
+          <ImageGalleryItem
+            imageItemProps={imageItem}
+            onModal={this.props.onImgClick}
+          />
+        </ul>
+      );
+    }
   }
 }

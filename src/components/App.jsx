@@ -1,53 +1,51 @@
 import React, { Component } from 'react';
 import { Searchbar } from './Searchbar/Searchbar';
+// import Loader from './Loader/Loader';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Button from './Button/Button';
 import Modal from './Modal/Modal';
-import ImageGalleryItem from './ImageGalleryItem/ImageGalleryItem';
-
-
-
-
 
 class App extends Component {
-state = {
- tags: '',
+  state = {
+    tags: '',
+    showModal: false,
+    showButton: false,
+  };
+
+  handleFormSubmit = tags => {
+    this.setState({ tags });
+  };
+
+  openModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }));
+  };
+
+  handleButton = () => {
+    this.setState(({showButton}) => ({
+      showButton: !showButton
+    }))
+  }
+
+
+
+  render() {
+    const { showModal, showButton } = this.state;
+    return (
+      <div>
+        <Searchbar SubmitTagProps={this.handleFormSubmit} />
+
+        <ImageGallery
+          imageTagsProps={this.state.tags}
+          onImgClick={this.openModal}
+        ></ImageGallery>
+
+        {showButton &&  < Button onClickButton={this.handleButton}/>}
+        {showModal && <Modal onClose={this.openModal} />}
+      </div>
+    );
+  }
 }
-
-
-handleFormSubmit = tags => {
-  this.setState({tags});
-}
-
-
-//     componentDidMount() {
-//       setTimeout(()=>{
-// fetch('https://pixabay.com/api/?q=cat&page=1&key=34892278-814f9e10ef5118b0e5ee7c1d3&image_type=photo&orientation=horizontal&id=736877')
-    
-    
-//     .then(res=> res.json())
-//     .then(console.log)
-//     .then(imageItem => this.setState({imageItem}))
-   
-//       },2000)
-//       console.log(this.state)
-//   }
-
-
-
-render() {
-  return (
-    <div>
-   
-       <Searchbar SubmitTagProps={this.handleFormSubmit}/> 
-        <ImageGallery imageTagsProps={this.state.tags}> <ImageGalleryItem  />
-       </ImageGallery>
-       
-      <Button />
-       <Modal />
-     </div>
-  );
-}
-};
 
 export default App;
