@@ -30,13 +30,13 @@ export default class ImageGallery extends Component {
       <ul className={css.ImageGallery}>
         {this.state.loading && <div>Loading...</div>}
         {imageItem && (
-          <div>
+          <li className={css.ImageGalleryItem}>
             <img
               className={css.ImageGalleryItem__image}
               src={imageItem.largeImageURL}
               alt=""
             />
-          </div>
+          </li>
         )}
       </ul>
     );

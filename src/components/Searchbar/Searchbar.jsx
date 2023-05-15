@@ -26,13 +26,13 @@ if (this.state.tags.trim() === '') {
 render() {
     return (
 <header className={css.Searchbar}>
-  <form className={css.SearchForm__input} onSubmit={this.handleSubmit}>
-    <button type="submit" className="button">
-      <span className="button-label">Search</span>
+  <form className={css.SearchFormt} onSubmit={this.handleSubmit}>
+    <button type="submit" className={css.SearchForm__button}>
+      <span className={css.SearchForm__button__label}>Search</span>
     </button>
 
     <input
-      className="input"
+      className={css.SearchForm__input}
       type="text"
       value={this.state.tags}
       onChange={this.handleTagsChange}
