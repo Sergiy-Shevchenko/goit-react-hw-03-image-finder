@@ -22,15 +22,18 @@ export default class ImageGallery extends Component {
     }
   }
 
+  
+
   render() {
+    const {imageItem} = this.state
     return (
       <ul className={css.ImageGallery}>
         {this.state.loading && <div>Loading...</div>}
-        {this.state.imageItem && (
+        {imageItem && (
           <div>
             <img
               className={css.ImageGalleryItem__image}
-              src={this.state.imageItem.webformatURL}
+              src={imageItem.largeImageURL}
               alt=""
             />
           </div>
