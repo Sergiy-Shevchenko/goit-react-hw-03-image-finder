@@ -1,15 +1,11 @@
-// import React from "react";
-import css from './Button.module.css'
+import css from './Button.module.css';
 
-export const Button = () => {
-
-    return (
-<button className={css.Button} tupe='button'
->
-Load more
-</button>
-    )
-
-}
+export const Button = ({ onClickBtn }) => {
+  return (
+    <button className={css.Button} type="botton" onClick={onClickBtn}>
+      Load more
+    </button>
+  );
+};
 
 export default Button;
