@@ -12,33 +12,13 @@ export default class ImageGallery extends Component {
     page: 1,
   };
 
-  // componentDidMount() {
-    
-  //         this.setState({ status: 'pending' });
 
-  //     fetch(
-  //       `https://pixabay.com/api/?q=${this.props.imageTagsProps}&key=34892278-814f9e10ef5118b0e5ee7c1d3&image_type=photo&orientation=horizontal&per_page=12`
-  //     )
-  //       .then(response => {
-  //         if (response.ok) {
-  //           return response.json();
-  //         }
-  //         Promise.reject(new Error(`Error!`))
-  //       })
-  //       .then(imageItem =>
-  //         this.setState({ imageItem: imageItem.hits, status: 'resolved' })
-  //       )
-  //       .catch(error => this.setState({ error, status: 'rejected' }));
-    
-  // }
-
-//---------------------------------------------------
 componentDidUpdate(prevProps, prevState) {
   if (prevProps.imageTagsProps !== this.props.imageTagsProps) {
     this.setState({ status: 'pending' });
 
     fetch(
-      `https://pixabay.com/api/?q=${this.props.imageTagsProps}&key=34892278-814f9e10ef5118b0e5ee7c1d3&image_type=photo&orientation=horizontal&per_page=12`
+      `https://pixabay.com/api/?q=${this.props.imageTagsProps}&key=34892278-814f9e10ef5118b0e5ee7c1d3&image_type=photo&orientation=horizontal&per_page=12&page=${this.state.page}`
     )
       .then(response => {
         if (response.ok) {
@@ -46,29 +26,28 @@ componentDidUpdate(prevProps, prevState) {
         }
         return Promise.reject(new Error(`Error!`));
       })
-      .then(imageItem =>
+      .then(({hits}) =>
         this.setState({ 
-          imageItem: imageItem.hits, status: 'resolved' })
+          imageItem: hits, 
+          status: 'resolved' })
       )
+      // .then(page => {
+      //   this.setState({page: imageItem.page})
+      // })
       .catch(error => this.setState({ error, status: 'rejected' }));
   }
+  console.log(this.state.page);
 }
-
-
-
-
-
-//--------------------------------------------------
-
-
-
 
   onClickLadMore = () => {
     this.setState(({ page }) => ({ page: page + 1 }));
   };
 
   render() {
-    const { imageItem, error, status } = this.state;
+    const { 
+      imageItem, 
+      error, 
+      status } = this.state;
 
     if (status === 'idle') {
       return <div></div>;
@@ -91,9 +70,10 @@ componentDidUpdate(prevProps, prevState) {
               onModal={this.props.onImgClick}
             />
           </ul>
-          <Button onClickBtn={()=>this.onClickLadMore()} />
+        
+          <Button onClickBtn={()=>this.onClickLadMore()}/> 
         </div>
       );
-    }
+             }
   }
 }
