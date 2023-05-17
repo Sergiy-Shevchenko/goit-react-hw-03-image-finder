@@ -1,10 +1,10 @@
 import css from './Loader.module.css';
-import { ReactComponent as Loader } from '../icons/spinner.svg';
+import { ReactComponent as LoaderIcon } from '../icons/spinner.svg';
 
-export default function SearchLoader() {
+export default function Loader() {
   return (
     <div>
-      <Loader size="48" className={css.icon__spin} />
+      <LoaderIcon size="48" className={css.icon__spin} />
     </div>
   );
 }
