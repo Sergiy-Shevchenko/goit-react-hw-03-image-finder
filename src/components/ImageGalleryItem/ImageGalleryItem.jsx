@@ -1,58 +1,68 @@
-import React, { Component } from 'react';
-import Modal from 'components/Modal/Modal';
-import css from './ImageGalleryItem.module.css';
+// import React, { Component } from 'react';
+// import Modal from 'components/Modal/Modal';
+// import css from './ImageGalleryItem.module.css';
 
-class ImageGalleryItem extends Component {
-  state = {
-    showModal: false,
-  };
+// class ImageGalleryItem extends Component {
+//   state = {
+//     showModal: false,
+//   };
 
-  onModal = () => {
-    this.setState(({ showModal }) => ({ showModal: !showModal }));
-  };
-  render() {
-    const { item } = this.props;
-    const { webformatURL } = item;
-    return (
-      <li className={css.ImageGalleryItem}>
-        <img
-        onClick={this.onModal}
-          className={css.ImageGalleryItem__image}
-          src={webformatURL}
-          alt="img"
+//   onModal = () => {
+//     this.setState(({ showModal }) => ({ showModal: !showModal }));
+//   };
+//   render() {
+//     const { item } = this.props;
+//     const { webformatURL } = item;
+//     return (
+//       <li className={css.ImageGalleryItem}>
+//         <img
+//         onClick={this.onModal}
+//           className={css.ImageGalleryItem__image}
+//           src={webformatURL}
+//           alt="img"
           
-        />
-        {this.state.showModal && <Modal onClose={this.onModal} image={item} />}
-      </li>
-    );
-  }
-}
+//         />
+//         {this.state.showModal && <Modal onClose={this.onModal} image={item} />}
+//       </li>
+//     );
+//   }
+// }
 
-export default ImageGalleryItem;
+// export default ImageGalleryItem;
 
 
 //-----------------------------------------------------------------------------------------------
 
 
 
+// import Modal from 'components/Modal/Modal'
+import css from './ImageGalleryItem.module.css'
 
-// import css from './ImageGalleryItem.module.css'
 
-// export default function  ImageGalleryItem ({imageItemProps, onModal}) {
-//   return (
-// <>
-// {imageItemProps.map(({id, webformatURL, largeImageURL, tags}) =>(
-//   <li
-//   key={id}
-//   className={css.ImageGalleryItem}>
-//   <img
-//   className={css.ImageGalleryItem__image}
-//   src={webformatURL}
-//   alt={tags}
-//   onClick={()=>onModal(largeImageURL)} />
-//   </li>
 
-// ) )}
-// </>
-// )
-// }
+
+
+
+export default function  ImageGalleryItem ({imageItemProps, onImgClick}) {
+   
+
+
+
+  
+  return (
+<>
+{imageItemProps.map(({id, webformatURL, tags}) =>(
+  <li
+  key={id}
+  className={css.ImageGalleryItem}>
+  <img
+  className={css.ImageGalleryItem__image}
+  src={webformatURL}
+  alt={tags}
+  onClick={()=>onImgClick(webformatURL)} />
+  </li>
+ 
+) )}
+</>
+)
+}

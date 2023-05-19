@@ -173,12 +173,8 @@ img {
 }
 
 .Modal {
-  width: calc(100vw - 144px);
-  height: calc(100vh - 72px); 
-
-
-  
-  background-color: #fff;
+  max-width: calc(100vw - 48px);
+  max-height: calc(100vh - 24px);
 
 }
 
