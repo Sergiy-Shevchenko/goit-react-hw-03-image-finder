@@ -38,9 +38,7 @@
 //   }
 // }
 
-
 //-------------------------------------------------------------------
-
 
 import React, { Component } from 'react';
 import { createPortal } from 'react-dom';
@@ -50,8 +48,8 @@ const modalRoot = document.querySelector('#modal-root');
 
 export default class Modal extends Component {
   state = {
-    modalImage: ''
-  }
+    modalImage: '',
+  };
 
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown);
@@ -74,12 +72,10 @@ export default class Modal extends Component {
   };
 
   render() {
-    const {children} = this.props
-      return createPortal(
+    const { children } = this.props;
+    return createPortal(
       <div className={css.Overlay} onClick={this.handleBackdropClick}>
-        <div className={css.Modal}>
-   {children}
-        </div>
+        <div className={css.Modal}>{children}</div>
       </div>,
       modalRoot
     );

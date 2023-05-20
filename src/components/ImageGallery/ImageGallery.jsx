@@ -27,91 +27,107 @@ import css from './ImageGallery.module.css';
 
 export default class ImageGallery extends Component {
   state = {
-    
     imageItem: [],
     error: null,
     status: 'idle',
     page: 1,
     totalHits: 0,
     showModal: false,
-    modalImage: ''
+    modalImage: '',
   };
 
-  
-componentDidMount(){
-  console.log('start')
-}
-
-componentDidUpdate(prevProps, prevState) {
-  if (prevProps.imageTagsProps !== this.props.imageTagsProps || prevState.page !== this.state.page) {
-    this.setState({ status: 'pending' });
-
-    fetch(
-      `https://pixabay.com/api/?q=${this.props.imageTagsProps}&key=34892278-814f9e10ef5118b0e5ee7c1d3&image_type=photo&orientation=horizontal&per_page=12&page=${this.state.page}`
-    )
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        return Promise.reject(new Error(`Error!`));
-      })
-      .then(({hits}) =>
-        this.setState({ 
-          imageItem: [...prevState.imageItem, ...hits],
-          status: 'resolved', 
-        
-        })
-          
-      )
-      
-
-
-      .catch(error => this.setState({ error, status: 'rejected' }));
+  componentDidMount() {
+    console.log('start');
   }
-    
 
-  console.log(this.state.imageItem.length);
-}
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.imageTagsProps !== this.props.imageTagsProps) {
+      this.setState({ status: 'pending' });
 
-openModal = webformatURL => {
-  this.setState({
-    showModal: true,
-    modalImage: webformatURL,
-  });
-}
-  
+      fetch(
+        `https://pixabay.com/api/?q=${this.props.imageTagsProps}&key=34892278-814f9e10ef5118b0e5ee7c1d3&image_type=photo&orientation=horizontal&per_page=12&page=${this.state.page}`
+      )
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          return Promise.reject(new Error(`Error!`));
+        })
+        .then(({ hits }) => {
+          if (hits.length === 0) {
+            return this.setState({
+              imageItem: hits,
+              status: 'rejected',
+              error: alert(
+                'Sorry, there are no images matching your search query. Please try again.'
+              ),
+            });
+          }
+          this.setState({
+            imageItem: hits,
+            status: 'resolved',
+            page: 1,
+          });
+        })
+        .catch(error => this.setState({ error, status: 'rejected' }));
+    }
 
-togleModal = () => {
-  this.setState(({ showModal }) => ({
-    showModal: !showModal,
-  }));
-};
+    console.log(this.state.imageItem.length);
 
+    if (prevState.page !== this.state.page && this.state.page !== 1) {
+      fetch(
+        `https://pixabay.com/api/?q=${this.props.imageTagsProps}&key=34892278-814f9e10ef5118b0e5ee7c1d3&image_type=photo&orientation=horizontal&per_page=12&page=${this.state.page}`
+      )
+        .then(({ hits }) => {
+          if (hits.length === 0) {
+            return this.setState({
+              imageItem: hits,
+              status: 'rejected',
+              error: alert(
+                'Sorry, there are no images matching your search query. Please try again.'
+              ),
+            });
+          }
+          this.setState({
+            imageItem: [...prevState.imageItem, ...hits],           
+            status: 'resolved',
+          });
+        })
+
+        .catch(error => this.setState({ error, status: 'rejected' }));
+    }
+  }
+
+  openModal = webformatURL => {
+    this.setState({
+      showModal: true,
+      modalImage: webformatURL,
+    });
+  };
+
+  togleModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }));
+  };
 
   onClickLadMore = () => {
     this.setState(({ page }) => ({ page: page + 1 }));
   };
 
   render() {
+    const { imageItem, error, status, showModal, modalImage } = this.state;
 
-    const { 
-      imageItem, 
-      error, 
-      status,
-      showModal,
-      modalImage
-    } = this.state;
-      
-    if (status === 'idle') {
-      return <></>;
-    }
+    // if (status === 'idle') {
+    //   return <h3>{}</h3>;
+    // }
 
     if (status === 'pending') {
       return <SearchLoader />;
     }
 
     if (status === 'rejected') {
-      return <h3>{error.message}</h3>;
+      return <p>{error}</p>;
     }
 
     if (status === 'resolved') {
@@ -121,17 +137,17 @@ togleModal = () => {
             <ImageGalleryItem
               imageItemProps={imageItem}
               onImgClick={this.openModal}
-             
             />
           </ul>
-        {<Button onClickBtn={()=>this.onClickLadMore()}/>} 
-        {showModal && (<Modal 
-        onClose={this.togleModal}> 
-        <img src={modalImage} alt={'webformatURL'}/>
-        </Modal>)}
+          {<Button onClickBtn={() => this.onClickLadMore()} />}
+          {showModal && (
+            <Modal onClose={this.togleModal}>
+              <img src={modalImage} alt={'webformatURL'} />
+            </Modal>
+          )}
         </div>
       );
-             }
+    }
   }
 }
 
