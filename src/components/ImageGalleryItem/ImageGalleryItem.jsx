@@ -1,3 +1,39 @@
+import PropTypes from 'prop-types';
+import css from './ImageGalleryItem.module.css';
+
+export default function ImageGalleryItem({ imageItemProps, onImgClick }) {
+  return (
+    <>
+      {imageItemProps.map(({ id, webformatURL, largeImageURL, tags }) => (
+        <li key={id} className={css.ImageGalleryItem}>
+          <img
+            className={css.ImageGalleryItem__image}
+            src={largeImageURL}
+            alt={tags}
+            onClick={() => onImgClick(webformatURL)}
+          />
+        </li>
+      ))}
+    </>
+  );
+}
+
+ImageGalleryItem.propTypes = {
+  onImgClick: PropTypes.func.isRequired,
+  imageItemProps: PropTypes.arrayOf (
+    PropTypes.shape({
+      id: PropTypes.number.isRequired, 
+      webformatURL: PropTypes.string.isRequired, 
+      largeImageURL: PropTypes.string.isRequired, 
+      tags: PropTypes.string.isRequired,
+    })
+  )
+
+}
+
+
+//-----------------------------------------------------------------------------------------------
+
 // import React, { Component } from 'react';
 // import Modal from 'components/Modal/Modal';
 // import css from './ImageGalleryItem.module.css';
@@ -20,7 +56,7 @@
 //           className={css.ImageGalleryItem__image}
 //           src={webformatURL}
 //           alt="img"
-          
+
 //         />
 //         {this.state.showModal && <Modal onClose={this.onModal} image={item} />}
 //       </li>
@@ -29,24 +65,3 @@
 // }
 
 // export default ImageGalleryItem;
-
-
-//-----------------------------------------------------------------------------------------------
-
-import css from './ImageGalleryItem.module.css';
-export default function ImageGalleryItem({ imageItemProps, onImgClick }) {
-  return (
-    <>
-      {imageItemProps.map(({ id, webformatURL, largeImageURL, tags }) => (
-        <li key={id} className={css.ImageGalleryItem}>
-          <img
-            className={css.ImageGalleryItem__image}
-            src={largeImageURL}
-            alt={tags}
-            onClick={() => onImgClick(webformatURL)}
-          />
-        </li>
-      ))}
-    </>
-  );
-}
