@@ -37,11 +37,11 @@ import css from './ImageGalleryItem.module.css';
 export default function ImageGalleryItem({ imageItemProps, onImgClick }) {
   return (
     <>
-      {imageItemProps.map(({ id, webformatURL, tags }) => (
+      {imageItemProps.map(({ id, webformatURL, largeImageURL, tags }) => (
         <li key={id} className={css.ImageGalleryItem}>
           <img
             className={css.ImageGalleryItem__image}
-            src={webformatURL}
+            src={largeImageURL}
             alt={tags}
             onClick={() => onImgClick(webformatURL)}
           />

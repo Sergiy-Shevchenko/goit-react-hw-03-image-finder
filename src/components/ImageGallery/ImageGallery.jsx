@@ -31,16 +31,48 @@ export default class ImageGallery extends Component {
     error: null,
     status: 'idle',
     page: 1,
-    totalHits: 0,
+    nextPage: false,
     showModal: false,
     modalImage: '',
   };
 
-  componentDidMount() {
-    console.log('start');
-  }
+//-------------------------------------------------------------------------------------------------------
+// componentDidUpdate(prevProps, prevState, ) {
+//   if (prevProps.imageTagsProps !== this.props.imageTagsProps || prevState.page !== this.state.page) {
+//     this.setState({ status: 'pending' });
 
-  componentDidUpdate(prevProps, prevState) {
+//     fetch(
+//       `https://pixabay.com/api/?q=${this.props.imageTagsProps}&key=34892278-814f9e10ef5118b0e5ee7c1d3&image_type=photo&orientation=horizontal&per_page=12&page=${this.state.page}`
+//     )
+//       .then(response => {
+//         if (response.ok) {
+//           return response.json();
+//         }
+//         return Promise.reject(new Error(`Error!`));
+//       })
+//       .then(({ hits }) => {
+//         // if (hits.length === 0) {
+//         //   return this.setState({
+//         //     imageItem: hits,
+//         //     status: 'rejected',
+//         //     error: alert(
+//         //       'Sorry, there are no images matching your search query. Please try again.'
+//         //     ),
+//         //   });
+//         // }
+//         this.setState({
+//           imageItem: [...prevState.imageItem, ...hits],
+//           status: 'resolved',
+//         //   page: page + 1,
+//         });
+//       })
+//       .catch(error => this.setState({ error, status: 'rejected' }));
+//   }
+
+// }
+
+  //------------------------------------------------------------------------------------------
+  componentDidUpdate(prevProps, prevState, ) {
     if (prevProps.imageTagsProps !== this.props.imageTagsProps) {
       this.setState({ status: 'pending' });
 
@@ -66,18 +98,23 @@ export default class ImageGallery extends Component {
           this.setState({
             imageItem: hits,
             status: 'resolved',
-            page: 1,
-          });
+                   });
         })
         .catch(error => this.setState({ error, status: 'rejected' }));
     }
 
-    console.log(this.state.imageItem.length);
 
     if (prevState.page !== this.state.page && this.state.page !== 1) {
+      this.setState({ nextPage: true });
       fetch(
         `https://pixabay.com/api/?q=${this.props.imageTagsProps}&key=34892278-814f9e10ef5118b0e5ee7c1d3&image_type=photo&orientation=horizontal&per_page=12&page=${this.state.page}`
       )
+             .then(response => {
+            if (response.ok) {
+              return response.json();
+            }
+            return Promise.reject(new Error(`Error!`));
+          })
         .then(({ hits }) => {
           if (hits.length === 0) {
             return this.setState({
@@ -88,16 +125,20 @@ export default class ImageGallery extends Component {
               ),
             });
           }
-          this.setState({
-            imageItem: [...prevState.imageItem, ...hits],           
+          this.setState(prevState => ({
+            imageItem: [...prevState.imageItem, ...hits],
+            nextPage: false,           
             status: 'resolved',
-          });
+           
+          }));
         })
 
         .catch(error => this.setState({ error, status: 'rejected' }));
     }
-  }
 
+    console.log(this.state.hits)
+  }
+//-------------------------------------------------------------------------------------------------------------------
   openModal = webformatURL => {
     this.setState({
       showModal: true,
@@ -116,18 +157,18 @@ export default class ImageGallery extends Component {
   };
 
   render() {
-    const { imageItem, error, status, showModal, modalImage } = this.state;
+    const { imageItem, error, status, showModal, modalImage, nextPage } = this.state;
 
-    // if (status === 'idle') {
-    //   return <h3>{}</h3>;
-    // }
+    if (status === 'idle') {
+      return <></>;
+    }
 
     if (status === 'pending') {
       return <SearchLoader />;
     }
 
     if (status === 'rejected') {
-      return <p>{error}</p>;
+      return {error}
     }
 
     if (status === 'resolved') {
@@ -139,7 +180,7 @@ export default class ImageGallery extends Component {
               onImgClick={this.openModal}
             />
           </ul>
-          {<Button onClickBtn={() => this.onClickLadMore()} />}
+          {nextPage ? (<SearchLoader/>) : ( <Button onClickBtn={() => this.onClickLadMore()} /> ) } 
           {showModal && (
             <Modal onClose={this.togleModal}>
               <img src={modalImage} alt={'webformatURL'} />

@@ -128,7 +128,7 @@ class App extends Component {
 
   handleFormSubmit = tags => {
     this.setState({ tags });
-    console.log(this.state.tags)
+    // console.log(this.state.tags)
   };
   
   // togleModal = () => {
